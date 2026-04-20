@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Flutter (Gemini Key)",
+      "request": "launch",
+      "type": "dart",
+      "toolArgs": [
+        "--dart-define=GEMINI_API_KEY=AIzaSyAXjrcrfHZRBcqZmWRVr-c6LlUn5GBkJp0"
+      ]
+    }
+  ]
+}
