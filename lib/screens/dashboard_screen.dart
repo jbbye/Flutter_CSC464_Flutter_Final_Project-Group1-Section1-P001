@@ -111,16 +111,18 @@ class _DashboardScreenState extends State<DashboardScreen>
         message = 'Firestore unavailable. Check internet and try again.';
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message)));
     } catch (error) {
       if (!mounted) {
         return;
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Unexpected error while creating session: $error')),
+        SnackBar(
+          content: Text('Unexpected error while creating session: $error'),
+        ),
       );
     } finally {
       if (mounted) {
@@ -175,7 +177,10 @@ class _DashboardScreenState extends State<DashboardScreen>
 
     try {
       final firestore = FirebaseFirestore.instance;
-      final messagesRef = firestore.collection('chats').doc(chatId).collection('messages');
+      final messagesRef = firestore
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages');
       final messagesSnapshot = await messagesRef.get();
 
       for (final chunk in messagesSnapshot.docs.chunked(400)) {
@@ -192,25 +197,27 @@ class _DashboardScreenState extends State<DashboardScreen>
         return;
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('$language session deleted.')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('$language session deleted.')));
     } on FirebaseException catch (error) {
       if (!mounted) {
         return;
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Delete failed: ${error.message ?? error.code}')),
+        SnackBar(
+          content: Text('Delete failed: ${error.message ?? error.code}'),
+        ),
       );
     } catch (error) {
       if (!mounted) {
         return;
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Delete failed: $error')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Delete failed: $error')));
     }
   }
 
@@ -325,10 +332,8 @@ class _DashboardScreenState extends State<DashboardScreen>
                           chatId: doc.id,
                           language: language,
                         ),
-                        onDelete: () => _deleteSession(
-                          chatId: doc.id,
-                          language: language,
-                        ),
+                        onDelete: () =>
+                            _deleteSession(chatId: doc.id, language: language),
                       ),
                     );
                   }).toList(),
@@ -358,7 +363,21 @@ class _DashboardScreenState extends State<DashboardScreen>
       appBar: isDesktop
           ? null
           : AppBar(
-              title: const Text('LingoAI'),
+              title: const Text(
+                'LingoAI',
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF4E5AE8),
+                  shadows: [
+                    Shadow(
+                      offset: Offset(0, 6),
+                      blurRadius: 14,
+                      color: Color(0x335B63F6),
+                    ),
+                  ],
+                ),
+              ),
               actions: [
                 TextButton.icon(
                   onPressed: _openLanguageTab,
@@ -449,10 +468,7 @@ class _DashboardScreenState extends State<DashboardScreen>
 }
 
 class _Header extends StatelessWidget {
-  const _Header({
-    required this.showAction,
-    required this.onNewSession,
-  });
+  const _Header({required this.showAction, required this.onNewSession});
 
   final bool showAction;
   final VoidCallback onNewSession;
@@ -469,9 +485,9 @@ class _Header extends StatelessWidget {
               Text(
                 'Welcome back!',
                 style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                      fontWeight: FontWeight.w800,
-                      color: const Color(0xFF1F2A44),
-                    ),
+                  fontWeight: FontWeight.w800,
+                  color: const Color(0xFF1F2A44),
+                ),
               ),
               const SizedBox(height: 8),
               Text(

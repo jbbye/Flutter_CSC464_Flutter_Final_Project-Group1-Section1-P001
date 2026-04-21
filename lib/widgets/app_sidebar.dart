@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppSidebar extends StatelessWidget {
-  const AppSidebar({
-    super.key,
-    required this.onNewSession,
-  });
+  const AppSidebar({super.key, required this.onNewSession});
 
   final VoidCallback onNewSession;
 
@@ -54,6 +51,13 @@ class AppSidebar extends StatelessWidget {
                   fontSize: 30,
                   fontWeight: FontWeight.w700,
                   color: Color(0xFF4E5AE8),
+                  shadows: [
+                    Shadow(
+                      color: Color(0x334E5AE8),
+                      blurRadius: 14,
+                      offset: Offset(0, 6),
+                    ),
+                  ],
                 ),
               ),
             ],
