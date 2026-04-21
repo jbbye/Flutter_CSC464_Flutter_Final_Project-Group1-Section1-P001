@@ -358,6 +358,8 @@ class _DashboardScreenState extends State<DashboardScreen>
                   Navigator.of(context).pop();
                   _openLanguageTab();
                 },
+                firebaseReady: widget.firebaseReady,
+                geminiApiKey: widget.geminiApiKey,
               ),
             ),
       appBar: isDesktop
@@ -366,7 +368,7 @@ class _DashboardScreenState extends State<DashboardScreen>
               title: const Text(
                 'LingoAI',
                 style: TextStyle(
-                  fontSize: 30,
+                  fontSize: 25,
                   fontWeight: FontWeight.w700,
                   color: Color(0xFF4E5AE8),
                   shadows: [
@@ -390,7 +392,12 @@ class _DashboardScreenState extends State<DashboardScreen>
       body: SafeArea(
         child: Row(
           children: [
-            if (isDesktop) AppSidebar(onNewSession: _openLanguageTab),
+            if (isDesktop)
+              AppSidebar(
+                onNewSession: _openLanguageTab,
+                firebaseReady: widget.firebaseReady,
+                geminiApiKey: widget.geminiApiKey,
+              ),
             Expanded(
               child: Container(
                 decoration: const BoxDecoration(
