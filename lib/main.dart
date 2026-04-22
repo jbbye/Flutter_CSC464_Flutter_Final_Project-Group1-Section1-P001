@@ -5,11 +5,21 @@ import 'package:finalassignment/screens/dashboard_screen.dart';
 import 'package:finalassignment/screens/login_screen.dart';
 import 'firebase_options.dart';
 
-const String _geminiApiKey = String.fromEnvironment('GEMINI_API_KEY');
+const String _geminiApiKey = String.fromEnvironment(
+  'GEMINI_API_KEY',
+  defaultValue: String.fromEnvironment('GOOGLE_API_KEY'),
+);
 
 Future<void> main() async {
   // Ensure Flutter engine is ready for async calls
   WidgetsFlutterBinding.ensureInitialized();
+
+  if (_geminiApiKey.trim().isEmpty) {
+    debugPrint(
+      'Gemini API key is empty. Run with --dart-define=GEMINI_API_KEY=YOUR_KEY '
+      'or --dart-define=GOOGLE_API_KEY=YOUR_KEY and fully restart the app.',
+    );
+  }
 
   var firebaseReady = false;
   try {

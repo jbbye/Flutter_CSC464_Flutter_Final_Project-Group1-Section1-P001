@@ -362,20 +362,20 @@ class _DashboardScreenState extends State<DashboardScreen>
                 geminiApiKey: widget.geminiApiKey,
               ),
             ),
-      appBar: isDesktop
+          appBar: isDesktop
           ? null
           : AppBar(
               title: const Text(
                 'LingoAI',
                 style: TextStyle(
-                  fontSize: 25,
+                  fontSize: 24,
                   fontWeight: FontWeight.w700,
                   color: Color(0xFF4E5AE8),
                   shadows: [
                     Shadow(
-                      offset: Offset(0, 6),
+                      color: Color(0x334E5AE8),
                       blurRadius: 14,
-                      color: Color(0x335B63F6),
+                      offset: Offset(0, 6),
                     ),
                   ],
                 ),

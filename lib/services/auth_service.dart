@@ -90,10 +90,14 @@ class AuthService {
     required String bio,
   }) async {
     try {
-      await _firestore.collection('users').doc(uid).update({
+      final user = _auth.currentUser;
+      await _firestore.collection('users').doc(uid).set({
+        'uid': uid,
+        if (user?.email != null) 'email': user!.email,
         'fullName': fullName,
         'bio': bio,
-      });
+        'updatedAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
     } catch (e) {
       rethrow;
     }

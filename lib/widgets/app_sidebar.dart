@@ -92,6 +92,18 @@ class _AppSidebarState extends State<AppSidebar> {
   @override
   Widget build(BuildContext context) {
     final borderColor = Colors.blueGrey.shade100;
+      final userEmail = _userData?['email'] as String? ?? 'User';
+    final fullName = _userData?['fullName'] as String?;
+    final displayName =
+      (fullName != null && fullName.trim().isNotEmpty) ? fullName : 'User';
+      final initials = _userData?['fullName']?.isNotEmpty == true
+      ? _userData!['fullName']
+        .split(' ')
+        .map((name) => name[0])
+        .join()
+        .toUpperCase()
+        .substring(0, 1)
+      : 'U';
 
     return Container(
       width: 270,
@@ -167,15 +179,7 @@ class _AppSidebarState extends State<AppSidebar> {
               ),
             ],
           ),
-          const SizedBox(height: 24),
-          Text(
-            'No active sessions',
-            style: TextStyle(
-              fontSize: 17,
-              color: Colors.blueGrey.shade300,
-              fontStyle: FontStyle.italic,
-            ),
-          ),
+
           const Spacer(),
           Divider(color: borderColor),
           const SizedBox(height: 18),
@@ -188,75 +192,144 @@ class _AppSidebarState extends State<AppSidebar> {
               color: Colors.blueGrey.shade500,
             ),
           ),
-          const SizedBox(height: 14),
-          GestureDetector(
-            onTap: _goToProfileSettings,
-            child: Row(
-              children: [
-                Icon(Icons.settings_outlined, color: Colors.blueGrey.shade400),
-                const SizedBox(width: 10),
-                Text(
-                  'Profile Settings',
-                  style: TextStyle(
-                    color: Colors.blueGrey.shade700,
-                    fontWeight: FontWeight.w600,
-                  ),
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF8FAFF),
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(color: borderColor),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x12000000),
+                  blurRadius: 14,
+                  offset: Offset(0, 6),
                 ),
               ],
             ),
-          ),
-          const SizedBox(height: 16),
-          GestureDetector(
-            onTap: _logout,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF7F8FC),
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: borderColor),
-              ),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 18,
-                    backgroundColor: const Color(0xFF39C5BB),
-                    child: Text(
-                      _userData?['fullName']?.isNotEmpty == true
-                          ? _userData!['fullName']
-                                .split(' ')
-                                .map((name) => name[0])
-                                .join()
-                                .toUpperCase()
-                                .substring(0, 1)
-                          : 'U',
-                      style: TextStyle(
-                        color: Colors.blueGrey.shade900,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: borderColor),
                   ),
-                  const SizedBox(width: 10),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Column(
                     children: [
-                      Text(
-                        _userData?['email'] ?? 'User',
-                        style: const TextStyle(fontWeight: FontWeight.w700),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                      Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 18,
+                            backgroundColor: const Color(0xFF39C5BB),
+                            child: Text(
+                              initials,
+                              style: TextStyle(
+                                color: Colors.blueGrey.shade900,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  displayName,
+                                  style: TextStyle(
+                                    color: Colors.blueGrey.shade900,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 14,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  userEmail,
+                                  style: TextStyle(
+                                    color: Colors.blueGrey.shade500,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 12,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                      Text(
-                        'LOGOUT',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.red.shade400,
+                      const SizedBox(height: 10),
+                      const Divider(height: 1),
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: _goToProfileSettings,
+                          borderRadius: BorderRadius.circular(10),
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 10, bottom: 2),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 30,
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFEDEFFF),
+                                    borderRadius: BorderRadius.circular(9),
+                                  ),
+                                  child: const Icon(
+                                    Icons.settings_outlined,
+                                    size: 18,
+                                    color: Color(0xFF5B63F6),
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Text(
+                                    'Profile Settings',
+                                    style: TextStyle(
+                                      color: Colors.blueGrey.shade800,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.chevron_right_rounded,
+                                  color: Colors.blueGrey.shade400,
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     ],
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: _logout,
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: const Color(0xFFE45454),
+                      side: const BorderSide(color: Color(0xFFF0B2B2)),
+                      backgroundColor: const Color(0xFFFFF6F6),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    icon: const Icon(Icons.logout_rounded, size: 18),
+                    label: const Text(
+                      'Logout',
+                      style: TextStyle(fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
