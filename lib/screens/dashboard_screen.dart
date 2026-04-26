@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:finalassignment/models/language_option.dart';
 import 'package:finalassignment/screens/chat_screen.dart';
 import 'package:finalassignment/widgets/app_sidebar.dart';
@@ -71,12 +72,21 @@ class _DashboardScreenState extends State<DashboardScreen>
       return;
     }
 
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please sign in to create sessions.')),
+      );
+      return;
+    }
+
     setState(() {
       _isCreatingSession = true;
     });
 
     try {
       final chatRef = await FirebaseFirestore.instance.collection('chats').add({
+        'userId': user.uid,
         'language': option.name,
         'createdAt': FieldValue.serverTimestamp(),
       });
@@ -252,6 +262,8 @@ class _DashboardScreenState extends State<DashboardScreen>
   }
 
   Widget _buildRecentSessionsTab(bool isDesktop) {
+    final user = FirebaseAuth.instance.currentUser;
+
     return SingleChildScrollView(
       padding: EdgeInsets.fromLTRB(
         isDesktop ? 30 : 16,
@@ -281,11 +293,13 @@ class _DashboardScreenState extends State<DashboardScreen>
           const SizedBox(height: 16),
           if (!widget.firebaseReady)
             EmptySessionsCard(onCreate: _openLanguageTab)
+          else if (user == null)
+            EmptySessionsCard(onCreate: _openLanguageTab)
           else
             StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
               stream: FirebaseFirestore.instance
                   .collection('chats')
-                  .orderBy('createdAt', descending: true)
+                  .where('userId', isEqualTo: user.uid)
                   .limit(20)
                   .snapshots(),
               builder: (context, snapshot) {
@@ -312,7 +326,21 @@ class _DashboardScreenState extends State<DashboardScreen>
                   );
                 }
 
-                final docs = snapshot.data?.docs ?? [];
+                final docs = [...(snapshot.data?.docs ?? [])]
+                  ..sort((a, b) {
+                    final aTs = a.data()['createdAt'] as Timestamp?;
+                    final bTs = b.data()['createdAt'] as Timestamp?;
+                    if (aTs == null && bTs == null) {
+                      return 0;
+                    }
+                    if (aTs == null) {
+                      return 1;
+                    }
+                    if (bTs == null) {
+                      return -1;
+                    }
+                    return bTs.compareTo(aTs);
+                  });
                 if (docs.isEmpty) {
                   return EmptySessionsCard(onCreate: _openLanguageTab);
                 }
@@ -362,7 +390,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                 geminiApiKey: widget.geminiApiKey,
               ),
             ),
-          appBar: isDesktop
+      appBar: isDesktop
           ? null
           : AppBar(
               title: const Text(
